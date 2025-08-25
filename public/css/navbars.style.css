@@ -43,7 +43,7 @@
 /*===== NAVBAR ONE =====*/
 .navbar-one {
     /*backgroundheader*/
-    background: var(--black);
+    background: var(--bs-blue);
 }
 @media only screen and (min-width: 768px) and (max-width: 991px), (max-width: 767px) {
     .navbar-one {

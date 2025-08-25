@@ -5,6 +5,147 @@
         .select2-container .select2-selection--single {
             height: auto !important;
         }
+
+        html,
+        body,
+        #app,
+        main {
+            overflow: visible !important;
+            height: auto !important;
+        }
+
+        /* 2. Atur tinggi slider agar proporsional */
+        .slider-area.slider-one #carouselOne .carousel-item {
+            height: 85vh;
+            /* Tinggi slider 85% dari tinggi layar */
+            min-height: 600px;
+            /* Tinggi minimal untuk layar desktop */
+            background-position: center center;
+            background-size: cover;
+            /* Membuat gambar menutupi area tanpa distorsi */
+        }
+
+        /* 3. Penyesuaian untuk layar kecil (mobile) */
+        @media (max-width: 767px) {
+            .slider-area.slider-one #carouselOne .carousel-item {
+                height: 50vh;
+                min-height: 350px;
+                background-size: cover;
+            }
+        }
+
+        .footer-eleven {
+            background-color: #004F98;
+            /* Warna biru navbar */
+            color: #E4E6EF;
+            /* Warna teks abu-abu terang agar mudah dibaca */
+            padding: 70px 0 50px 0;
+            font-size: 0.95rem;
+        }
+
+        .footer-eleven a {
+            color: #E4E6EF;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-eleven a:hover {
+            color: #ffffff;
+        }
+
+        .footer-widget .widget-title,
+        .footer-widget h4 {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .footer-info-item i {
+            color: #ffffff;
+            /* Ikon menjadi putih */
+            font-size: 1.2rem;
+            margin-right: 15px;
+            margin-top: 4px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .social-icon i {
+            color: #ffffff !important;
+            /* Memastikan ikon sosial media berwarna putih */
+            font-size: 1.3rem;
+        }
+
+        .social-icon:hover {
+            background-color: #ffffff;
+        }
+
+        .social-icon:hover i {
+            color: #004F98 !important;
+        }
+
+        .map-container iframe {
+            border-radius: 0.475rem;
+        }
+
+        .stats-list .d-flex {
+            margin-bottom: 0.85rem;
+            font-size: 0.9rem;
+        }
+
+        .stats-list .badge {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .footer-bottom {
+            background-color: #003a75;
+            /* Warna biru lebih gelap */
+            padding: 1.25rem 0;
+            color: #B5B5C3;
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom a {
+            color: #E4E6EF;
+        }
+
+        .slider-area.slider-one #carouselOne .carousel-item {
+            height: 90vh;
+            /* Tinggi slider 90% dari tinggi layar */
+            min-height: 600px;
+            background-position: center center;
+            background-size: cover;
+        }
+
+        @media (max-width: 767px) {
+            .slider-area.slider-one #carouselOne .carousel-item {
+                height: 60vh;
+                min-height: 400px;
+            }
+        }
     </style>
 
     <script>
@@ -57,7 +198,7 @@
             }]
         };
 
-        window.onload = function() {
+        window.onload = function () {
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myBar = new Chart(ctx, {
                 type: 'bar',
@@ -108,7 +249,7 @@
                 <div class="carousel-inner">
                     @foreach ($slider as $var)
                         <div class="carousel-item  @if ($loop->first) active @endif"
-                            style="background-image: url({{ asset('banner/' . $var->gambar) }});background-size:100%;">
+                            style="background-image: url({{ asset('banner/' . $var->gambar) }});">
                             <div class="carousel-caption">
                                 <div class="container">
                                     <div class="row justify-content-center">
@@ -146,11 +287,11 @@
                 <div class="col-lg-12">
                     <div class="header-content">
                         <h1 class="text-center mt-5 mb-5">{!! app()->getLocale() == 'id'
-                            ? 'Jaringan Dokumentasi dan Informasi Hukum <br> Kabupaten Banjarnegara'
-                            : GoogleTranslate::trans(
-                                'Jaringan Dokumentasi dan Informasi Hukum <br> Kabupaten Banjarnegara',
-                                app()->getLocale(),
-                            ) !!}</h1>
+        ? 'Jaringan Dokumentasi dan Informasi Hukum <br> Kabupaten Banjarnegara'
+        : GoogleTranslate::trans(
+            'Jaringan Dokumentasi dan Informasi Hukum <br> Kabupaten Banjarnegara',
+            app()->getLocale(),
+        ) !!}</h1>
                         @include('partial.pencarian')
                     </div>
                 </div>
@@ -160,15 +301,15 @@
 
             <div class="row justify-content-center">
                 <!-- <div class="col-lg-6" style="margin-bottom:50px;">
-                                                                                    <div class="section-title align-center">
-                                                                                        <h2 class="fw-bold text-gray-500 text-center">
-                                                                                            {{ GoogleTranslate::trans('Informasi produk dan layanan hukum Jawa Tengah dalam satu portal', app()->getLocale()) }}
-                                                                                        </h2>
-                                                                                        <p class="text-gray-500 text-center">
-                                                                                            {{ GoogleTranslate::trans('Biro Hukum Jawa Tengah, Ngayemi Dan Nglayani', app()->getLocale()) }}
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </div> -->
+                                                                                                                            <div class="section-title align-center">
+                                                                                                                                <h2 class="fw-bold text-gray-500 text-center">
+                                                                                                                                    {{ GoogleTranslate::trans('Informasi produk dan layanan hukum Jawa Tengah dalam satu portal', app()->getLocale()) }}
+                                                                                                                                </h2>
+                                                                                                                                <p class="text-gray-500 text-center">
+                                                                                                                                    {{ GoogleTranslate::trans('Biro Hukum Jawa Tengah, Ngayemi Dan Nglayani', app()->getLocale()) }}
+                                                                                                                                </p>
+                                                                                                                            </div>
+                                                                                                                        </div> -->
                 <div class="col-lg-12">
                     <div class="section-title align-center">
                         <center><iframe width="800" height="500"
@@ -272,81 +413,67 @@
 
     <!-- Start Latest News Area -->
     <section id="blog" class="latest-news-area section">
-        <div class="section-title-five">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
+        <div class="container">
+            <!-- Section Header -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="section-title-five">
                         <div class="content">
-                            <h1 class="fw-bold">
+                            <h2 class="fw-bold">
                                 {{ app()->getLocale() == 'id' ? 'Pengumuman / Berita' : GoogleTranslate::trans('Pengumuman / Berita', app()->getLocale()) }}
-                            </h1>
-                            <p>
+                            </h2>
+                            <p class="mt-1">
                                 {{ app()->getLocale() == 'id' ? 'Media Informasi dan Berita terkini JDIH Kabupaten Banjarnegara' : GoogleTranslate::trans('Media Informasi dan Berita terkini JDIH Kabupaten Banjarnegara', app()->getLocale()) }}
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--======  End Section Title Five ======-->
-        <div class="container">
+            <!-- End Section Header -->
+
+            <!-- News Card Grid -->
             <div class="row">
-                <div class="col-lg-5 col-12">
-                    <div class="single-news">
-                        <div class="image">
-                            <img src="{{ asset('berita/' . $data[0]->images) }}" alt="Blog" />
-                            <div class="meta-details">
-                                <img class="thumb" src="{{ asset('media/svg/avatars/blank.svg') }}" alt="Author">
-                                <span>{{ $data[0]->views . ' ' . (app()->getLocale() == 'id') ? 'Kali' : GoogleTranslate::trans('Kali', app()->getLocale()) }}</span>
+                @forelse($data as $var)
+                    <div class="col-lg-3 col-md-6 col-12 mb-4">
+                        <div class="card h-100 news-card shadow-sm border-0">
+                            <div class="news-card-img-container">
+                                <a href="{{ route('artikel.detail', [$var->link]) }}">
+                                    <img src="{{ asset('berita/' . $var->images) }}" class="card-img-top"
+                                        alt="{{ $var->nama }}">
+                                </a>
                             </div>
-                        </div>
-                        <div class="content-body">
-                            <h4 class="title">
-                                <a href="{{ route('artikel.detail', [$data[0]->link]) }}">
-                                    {{ app()->getLocale() == 'id' ? Helper::string_rmv_html($data[0]->nama) : GoogleTranslate::trans(Helper::string_rmv_html($data[0]->nama), app()->getLocale()) }}</a>
-                            </h4>
-                            <p>
-                                {!! app()->getLocale() == 'id'
-                                    ? substr($data[0]->isi, 0, 360)
-                                    : GoogleTranslate::trans(substr($data[0]->isi, 0, 360), app()->getLocale()) !!} ...
-                            </p>
+                            <div class="card-body d-flex flex-column p-4">
+                                <div>
+                                    <span class="badge bg-primary mb-2">Berita Terbaru</span>
+                                    <h5 class="card-title">
+                                        <a href="{{ route('artikel.detail', [$var->link]) }}"
+                                            class="text-dark fw-bold text-hover-primary">
+                                            {{ Str::limit($var->nama, 55) }}
+                                        </a>
+                                    </h5>
+                                    <p class="card-text text-muted small mb-2">
+                                        <i class="lni lni-calendar me-1"></i>
+                                        {!! Helper::tgl_indo(date('Y-m-d', strtotime($var->tgl_publish))) !!}
+                                    </p>
+                                    <p class="card-text text-muted">
+                                        {!! Str::limit(strip_tags($var->isi), 100) !!}
+                                    </p>
+                                </div>
+                                <div class="mt-auto pt-3">
+                                    <a href="{{ route('artikel.detail', [$var->link]) }}" class="fw-bold">Baca Selengkapnya <i
+                                            class="lni lni-arrow-right"></i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-lg-7 col-12">
-                    @foreach ($data as $key => $var)
-                        @if ($key > 0)
-                            <div class="d-flex align-items-sm-center mb-1">
-                                <div class="symbol symbol-150px symbol-2by3 me-4 mt-10">
-                                    <div class="symbol-label"
-                                        style="background-image: url('{{ asset('berita/' . $var->images) }}')"></div>
-                                </div>
-                                <div class="d-flex align-items-center flex-wrap flex-grow-1 mt-n2 mt-lg-n1">
-                                    <div class="single-news d-flex flex-column flex-grow-1 my-lg-0 my-2 pe-3">
-                                        <div class="content-body">
-                                            <h4 class="mt-6">
-                                                <a href="{{ route('artikel.detail', [$var->link]) }}"
-                                                    class="text-gray-900 text-hover-danger">
-                                                    {{ app()->getLocale() == 'id' ? $var->nama : GoogleTranslate::trans($var->nama, app()->getLocale()) }}
-                                                </a>
-                                            </h4>
-                                            <div class="blog-content mt-3">
-                                                <span><i class="lni lni-calendar"></i>
-                                                    <?= helper::tgl_indo(date('Y-m-d', strtotime($var->tgl_publish))) ?>
-                                                </span>
-                                                <span><i class="lni lni-write"></i> {{ $var->penulis }}</span>
-                                                <br />
-                                                <br />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
+                @empty
+                    <div class="col-12">
+                        <p>Belum ada berita untuk ditampilkan.</p>
+                    </div>
+                @endforelse
             </div>
+            <!-- End News Card Grid -->
+
         </div>
     </section>
     <!-- End Latest News Area -->
@@ -428,37 +555,37 @@
                         </div>
                     </div>
                     @foreach ($terpopuler as $key => $var)
-                        <div class="d-flex align-items-sm-center">
-                            <div class="d-flex align-items-center flex-wrap flex-grow-1 mt-n2 mt-lg-n1">
-                                <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pe-3">
-                                    <span class="text-gray-600 fw-semibold fs-6 mt-10">
-                                        {{ app()->getLocale() == 'id' ? 'Subjek :' : GoogleTranslate::trans('Subjek :', app()->getLocale()) }}
-                                        <?php
-                                        $separated = explode(',', $var->file_tags);
-                                        foreach ($separated as $value) {
-                                            echo '<a href="' . url('inventarisasi-hukum/subjek/' . str_replace(' ', '-', trim($value))) . '" class="text-hover-danger text-uppercase text-gray-900">' . $value . '</a>&nbsp;';
-                                        }
-                                        ?>
-                                    </span>
-                                    <h4 class="title">
-                                        <a href="{{ url('inventarisasi-hukum/detail/' . $var->link) }}"
-                                            class="text-hover-danger text-gray-900">
-                                            {{ app()->getLocale() == 'id' ? $var->nama . ' Nomor ' . $var->no_peraturan . ' Tahun ' . $var->tahun_diundang : GoogleTranslate::trans($var->nama . ' Nomor ' . $var->no_peraturan . ' Tahun ' . $var->tahun_diundang, app()->getLocale()) }}
-                                        </a>
-                                    </h4>
-                                    <div class="d-flex align-items-center mb-4">
-                                        <p class="p-1em">
-                                            {{ app()->getLocale() == 'id' ? 'Tentang ' . Helper::string_rmv_html($var->content) : GoogleTranslate::trans('Tentang ' . Helper::string_rmv_html($var->content), app()->getLocale()) }}
-                                        </p>
+                                    <div class="d-flex align-items-sm-center">
+                                        <div class="d-flex align-items-center flex-wrap flex-grow-1 mt-n2 mt-lg-n1">
+                                            <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pe-3">
+                                                <span class="text-gray-600 fw-semibold fs-6 mt-10">
+                                                    {{ app()->getLocale() == 'id' ? 'Subjek :' : GoogleTranslate::trans('Subjek :', app()->getLocale()) }}
+                                                    <?php
+                        $separated = explode(',', $var->file_tags);
+                        foreach ($separated as $value) {
+                            echo '<a href="' . url('inventarisasi-hukum/subjek/' . str_replace(' ', '-', trim($value))) . '" class="text-hover-danger text-uppercase text-gray-900">' . $value . '</a>&nbsp;';
+                        }
+                                                                                                                                                                                                                                                ?>
+                                                </span>
+                                                <h4 class="title">
+                                                    <a href="{{ url('inventarisasi-hukum/detail/' . $var->link) }}"
+                                                        class="text-hover-danger text-gray-900">
+                                                        {{ app()->getLocale() == 'id' ? $var->nama . ' Nomor ' . $var->no_peraturan . ' Tahun ' . $var->tahun_diundang : GoogleTranslate::trans($var->nama . ' Nomor ' . $var->no_peraturan . ' Tahun ' . $var->tahun_diundang, app()->getLocale()) }}
+                                                    </a>
+                                                </h4>
+                                                <div class="d-flex align-items-center mb-4">
+                                                    <p class="p-1em">
+                                                        {{ app()->getLocale() == 'id' ? 'Tentang ' . Helper::string_rmv_html($var->content) : GoogleTranslate::trans('Tentang ' . Helper::string_rmv_html($var->content), app()->getLocale()) }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="badge fs-8 fw-bold my-2">
+                                            <span class="text-gray-400 fw-semibold fs-7">
+                                                # {{ $key + 1 }}
+                                            </span>
+                                        </span>
                                     </div>
-                                </div>
-                            </div>
-                            <span class="badge fs-8 fw-bold my-2">
-                                <span class="text-gray-400 fw-semibold fs-7">
-                                    # {{ $key + 1 }}
-                                </span>
-                            </span>
-                        </div>
                     @endforeach
                 </div>
                 <div class="col-lg-6 col-12">
@@ -470,37 +597,37 @@
                         </div>
                     </div>
                     @foreach ($terbaru as $key => $var)
-                        <div class="d-flex align-items-sm-center">
-                            <div class="d-flex align-items-center flex-wrap flex-grow-1 mt-n2 mt-lg-n1">
-                                <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pe-3">
-                                    <span class="text-gray-600 fw-semibold fs-6 mt-10">
-                                        {{ app()->getLocale() == 'id' ? 'Subjek :' : GoogleTranslate::trans('Subjek :', app()->getLocale()) }}
-                                        <?php
-                                        $separated = explode(',', $var->file_tags);
-                                        foreach ($separated as $value) {
-                                            echo '<a href="' . url('inventarisasi-hukum/subjek/' . str_replace(' ', '-', trim($value))) . '" class="text-hover-danger text-uppercase text-gray-900">' . $value . '</a>&nbsp;';
-                                        }
-                                        ?>
-                                    </span>
-                                    <h4 class="title">
-                                        <a href="{{ url('inventarisasi-hukum/detail/' . $var->link) }}"
-                                            class="text-hover-danger text-gray-900">
-                                            {{ app()->getLocale() == 'id' ? $var->nama . ' Nomor ' . $var->no_peraturan . ' Tahun ' . $var->tahun_diundang : GoogleTranslate::trans($var->nama . ' Nomor ' . $var->no_peraturan . ' Tahun ' . $var->tahun_diundang, app()->getLocale()) }}
-                                        </a>
-                                    </h4>
-                                    <div class="d-flex align-items-center mb-4">
-                                        <p class="p-1em">
-                                            {{ app()->getLocale() == 'id' ? 'Tentang ' . Helper::string_rmv_html($var->content) : GoogleTranslate::trans('Tentang ' . Helper::string_rmv_html($var->content), app()->getLocale()) }}
-                                        </p>
+                                    <div class="d-flex align-items-sm-center">
+                                        <div class="d-flex align-items-center flex-wrap flex-grow-1 mt-n2 mt-lg-n1">
+                                            <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pe-3">
+                                                <span class="text-gray-600 fw-semibold fs-6 mt-10">
+                                                    {{ app()->getLocale() == 'id' ? 'Subjek :' : GoogleTranslate::trans('Subjek :', app()->getLocale()) }}
+                                                    <?php
+                        $separated = explode(',', $var->file_tags);
+                        foreach ($separated as $value) {
+                            echo '<a href="' . url('inventarisasi-hukum/subjek/' . str_replace(' ', '-', trim($value))) . '" class="text-hover-danger text-uppercase text-gray-900">' . $value . '</a>&nbsp;';
+                        }
+                                                                                                                                                                                                                                                ?>
+                                                </span>
+                                                <h4 class="title">
+                                                    <a href="{{ url('inventarisasi-hukum/detail/' . $var->link) }}"
+                                                        class="text-hover-danger text-gray-900">
+                                                        {{ app()->getLocale() == 'id' ? $var->nama . ' Nomor ' . $var->no_peraturan . ' Tahun ' . $var->tahun_diundang : GoogleTranslate::trans($var->nama . ' Nomor ' . $var->no_peraturan . ' Tahun ' . $var->tahun_diundang, app()->getLocale()) }}
+                                                    </a>
+                                                </h4>
+                                                <div class="d-flex align-items-center mb-4">
+                                                    <p class="p-1em">
+                                                        {{ app()->getLocale() == 'id' ? 'Tentang ' . Helper::string_rmv_html($var->content) : GoogleTranslate::trans('Tentang ' . Helper::string_rmv_html($var->content), app()->getLocale()) }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="badge fs-8 fw-bold my-2">
+                                            <span class="text-gray-400 fw-semibold fs-7">
+                                                # {{ $key + 1 }}
+                                            </span>
+                                        </span>
                                     </div>
-                                </div>
-                            </div>
-                            <span class="badge fs-8 fw-bold my-2">
-                                <span class="text-gray-400 fw-semibold fs-7">
-                                    # {{ $key + 1 }}
-                                </span>
-                            </span>
-                        </div>
                     @endforeach
                 </div>
             </div>
@@ -631,8 +758,8 @@
                 <div class="col-4">
                     <div class="card">
                         <div class="card-header">
-                            <a class="btn" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                                aria-expanded="false" aria-controls="collapseOne">
+                            <a class="btn" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false"
+                                aria-controls="collapseOne">
                                 Website OPD
                             </a>
                         </div>
@@ -760,8 +887,8 @@
                 </div>
             </div>
             <div class="col-md-7 align-right p-5">
-                <a href="{{ url('videos') }}" class="btn primary-btn-outline rounded-full mr-2"
-                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                <a href="{{ url('videos') }}" class="btn primary-btn-outline rounded-full mr-2" data-kt-menu-trigger="click"
+                    data-kt-menu-placement="bottom-end">
                     <span>{{ app()->getLocale() == 'id' ? 'Selengkapnya' : GoogleTranslate::trans('Selengkapnya', app()->getLocale()) }}</span>
                     <i class="lni lni-arrow-right fs-2"></i>
                 </a>
@@ -775,7 +902,7 @@
 @section('footer')
     @include('partial.script')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             Swal.fire({
                 title: 'Apakah informasi atau produk hukum yang anda cari tidak tersedia?',
                 text: 'Silahkan buka website jdih versi lama untuk mencari informasi maupun produk hukum yang anda inginkan',
@@ -888,8 +1015,8 @@
             },
         });
 
-        $(document).ready(function() {
-            $(".kt_advanced_search_button_1").click(function() {
+        $(document).ready(function () {
+            $(".kt_advanced_search_button_1").click(function () {
                 let namadokumen = $("#nama_dokumen").val();
                 let kategori_ = $("#kategori_").val();
                 let tahun_ = $("#tahun_").val();
