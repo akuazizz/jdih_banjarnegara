@@ -42,10 +42,12 @@
                         <a href="https://www.instagram.com/jdih_banjarnegara/" target="_blank" class="me-3">
                             <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" 
                                 alt="Instagram" width="26" height="26" style="filter: invert(1);" />
+                              <span>Instagram</span>
                         </a>
                         <a href="https://www.tiktok.com/@jdih_banjarnegara" target="_blank">
                             <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" 
                                 alt="TikTok" width="26" height="26" style="filter: invert(1);" />
+                            <span>TikTok</span>
                         </a>
                     </div>
                 </div>
