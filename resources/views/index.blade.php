@@ -34,104 +34,6 @@
             }
         }
 
-        .footer-eleven {
-            background-color: #004F98;
-            /* Warna biru navbar */
-            color: #E4E6EF;
-            /* Warna teks abu-abu terang agar mudah dibaca */
-            padding: 70px 0 50px 0;
-            font-size: 0.95rem;
-        }
-
-        .footer-eleven a {
-            color: #E4E6EF;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-eleven a:hover {
-            color: #ffffff;
-        }
-
-        .footer-widget .widget-title,
-        .footer-widget h4 {
-            color: #ffffff;
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .footer-info-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .footer-info-item i {
-            color: #ffffff;
-            /* Ikon menjadi putih */
-            font-size: 1.2rem;
-            margin-right: 15px;
-            margin-top: 4px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .social-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            margin-right: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .social-icon i {
-            color: #ffffff !important;
-            /* Memastikan ikon sosial media berwarna putih */
-            font-size: 1.3rem;
-        }
-
-        .social-icon:hover {
-            background-color: #ffffff;
-        }
-
-        .social-icon:hover i {
-            color: #004F98 !important;
-        }
-
-        .map-container iframe {
-            border-radius: 0.475rem;
-        }
-
-        .stats-list .d-flex {
-            margin-bottom: 0.85rem;
-            font-size: 0.9rem;
-        }
-
-        .stats-list .badge {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            font-weight: 500;
-        }
-
-        .footer-bottom {
-            background-color: #003a75;
-            /* Warna biru lebih gelap */
-            padding: 1.25rem 0;
-            color: #B5B5C3;
-            font-size: 0.85rem;
-        }
-
-        .footer-bottom a {
-            color: #E4E6EF;
-        }
-
         .slider-area.slider-one #carouselOne .carousel-item {
             height: 90vh;
             /* Tinggi slider 90% dari tinggi layar */
@@ -301,15 +203,15 @@
 
             <div class="row justify-content-center">
                 <!-- <div class="col-lg-6" style="margin-bottom:50px;">
-                                                                                                                            <div class="section-title align-center">
-                                                                                                                                <h2 class="fw-bold text-gray-500 text-center">
-                                                                                                                                    {{ GoogleTranslate::trans('Informasi produk dan layanan hukum Jawa Tengah dalam satu portal', app()->getLocale()) }}
-                                                                                                                                </h2>
-                                                                                                                                <p class="text-gray-500 text-center">
-                                                                                                                                    {{ GoogleTranslate::trans('Biro Hukum Jawa Tengah, Ngayemi Dan Nglayani', app()->getLocale()) }}
-                                                                                                                                </p>
-                                                                                                                            </div>
-                                                                                                                        </div> -->
+                                                                                                                                <div class="section-title align-center">
+                                                                                                                                    <h2 class="fw-bold text-gray-500 text-center">
+                                                                                                                                        {{ GoogleTranslate::trans('Informasi produk dan layanan hukum Jawa Tengah dalam satu portal', app()->getLocale()) }}
+                                                                                                                                    </h2>
+                                                                                                                                    <p class="text-gray-500 text-center">
+                                                                                                                                        {{ GoogleTranslate::trans('Biro Hukum Jawa Tengah, Ngayemi Dan Nglayani', app()->getLocale()) }}
+                                                                                                                                    </p>
+                                                                                                                                </div>
+                                                                                                                            </div> -->
                 <div class="col-lg-12">
                     <div class="section-title align-center">
                         <center><iframe width="800" height="500"
@@ -565,7 +467,7 @@
                         foreach ($separated as $value) {
                             echo '<a href="' . url('inventarisasi-hukum/subjek/' . str_replace(' ', '-', trim($value))) . '" class="text-hover-danger text-uppercase text-gray-900">' . $value . '</a>&nbsp;';
                         }
-                                                                                                                                                                                                                                                ?>
+                                                                                                                                                                                                                                                                    ?>
                                                 </span>
                                                 <h4 class="title">
                                                     <a href="{{ url('inventarisasi-hukum/detail/' . $var->link) }}"
@@ -607,7 +509,7 @@
                         foreach ($separated as $value) {
                             echo '<a href="' . url('inventarisasi-hukum/subjek/' . str_replace(' ', '-', trim($value))) . '" class="text-hover-danger text-uppercase text-gray-900">' . $value . '</a>&nbsp;';
                         }
-                                                                                                                                                                                                                                                ?>
+                                                                                                                                                                                                                                                                    ?>
                                                 </span>
                                                 <h4 class="title">
                                                     <a href="{{ url('inventarisasi-hukum/detail/' . $var->link) }}"

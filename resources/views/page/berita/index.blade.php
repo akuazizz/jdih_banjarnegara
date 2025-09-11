@@ -1,108 +1,121 @@
 @extends('app')
+
 @section('head')
     @include('partial.head')
+    <style>
+        /* CSS Khusus untuk halaman berita */
+        .news-list-main .card-img-top {
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .news-list-item .news-image {
+            width: 200px;
+            height: 130px;
+            object-fit: cover;
+        }
+
+        .news-list-item .card-body {
+            padding: 1.5rem;
+        }
+
+        .pagination .page-link {
+            color: #004F98;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #004F98;
+            border-color: #004F98;
+            color: #fff;
+        }
+    </style>
 @endsection
+
 @section('content')
     @include('partial.topbar')
-    <div id="blog" class="latest-news-area section mt-15">
-        <div class="section-title-five">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="content">
-                            <h1 class="fw-bold">{{ __('Pengumuman / Berita') }}</h1>
-                            <p>
-                                {{ __('Media Informasi dan Berita terkini JDIH Kabupaten Banjarnegara') }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <div class="container-xxl">
+            <!-- Header Halaman -->
+            <div class="text-center my-5 pt-5">
+                <h1 class="fw-bolder">Pengumuman / Berita</h1>
+                <p class="text-muted">Media Informasi dan Berita terkini JDIH Kabupaten Banjarnegara</p>
             </div>
-        </div>
-        <!--======  End Section Title Five ======-->
-        <div class="container">
-            <div class="d-flex justify-content-center mb-10">
-                {{ $data->appends([
-                        'kategori' => $kategori,
-                    ])->links('pagination') }}
-            </div>
-            <div class="row">
-                <div class="col-lg-5 col-12">
-                    <div class="single-news">
-                        <div class="image">
-                            <img src="{{ asset('berita/' . $data[0]->images) }}" alt="Blog" />
-                            <div class="meta-details">
-                                <img class="thumb" src="{{ asset('media/svg/avatars/blank.svg') }}" alt="Author">
-                                <span>{{ $data[0]->views . ' ' . __('Kali') }}</span>
+
+            <!-- Konten Berita -->
+            <div class="card card-flush shadow-sm">
+                <div class="card-body">
+
+                    @if($data->isNotEmpty())
+                        <!-- Berita Utama (Paling Atas) -->
+                        <div class="news-list-main mb-5">
+                            @php $first_news = $data->first(); @endphp
+                            <a href="{{ route('artikel.detail', [$first_news->link]) }}">
+                                <img src="{{ asset('berita/' . $first_news->images) }}" class="card-img-top rounded"
+                                    alt="{{ $first_news->nama }}">
+                            </a>
+                            <div class="mt-4">
+                                <div class="d-flex align-items-center text-muted small mb-2">
+                                    <span><i class="lni lni-calendar me-1"></i>
+                                        {!! Helper::tgl_indo(date('Y-m-d', strtotime($first_news->tgl_publish))) !!}</span>
+                                    <span class="mx-2">•</span>
+                                    <span><i class="lni lni-eye me-1"></i> {{ $first_news->views }} Kali</span>
+                                    <span class="mx-2">•</span>
+                                    <span><i class="lni lni-user me-1"></i> {{ $first_news->penulis }}</span>
+                                </div>
+                                <h2 class="fw-bolder">
+                                    <a href="{{ route('artikel.detail', [$first_news->link]) }}"
+                                        class="text-dark text-hover-primary">{{ $first_news->nama }}</a>
+                                </h2>
+                                <p class="text-muted mt-2">{!! Str::limit(strip_tags($first_news->isi), 250) !!}</p>
                             </div>
                         </div>
-                        <div class="content-body">
-                            <h4 class="title">
-                                <a href="{{ route('artikel.detail', [$data[0]->link]) }}">
-                                    {{ GoogleTranslate::trans(Helper::string_rmv_html($data[0]->nama), app()->getLocale()) }}
-                                </a>
-                            </h4>
-                            <p>
-                                {!! GoogleTranslate::trans(substr($data[0]->isi, 0, 360), app()->getLocale()) !!} ...
-                            </p>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-7 col-12">
-                    @foreach ($data as $key => $var)
-                        @if ($key > 0)
-                            <div class="d-flex align-items-sm-center mb-1">
-                                <div class="symbol symbol-150px symbol-2by3 me-4 mt-10">
-                                    <div class="symbol-label"
-                                        style="background-image: url('{{ asset('berita/' . $var->images) }}')"></div>
+                        <hr class="my-5">
+
+                        <!-- Daftar Berita Lainnya -->
+                        @foreach($data->slice(1) as $var)
+                            <div class="news-list-item d-flex align-items-center mb-4 pb-4 @if(!$loop->last) border-bottom @endif">
+                                <div class="flex-shrink-0">
+                                    <a href="{{ route('artikel.detail', [$var->link]) }}">
+                                        <img src="{{ asset('berita/' . $var->images) }}" class="rounded news-image"
+                                            alt="{{ $var->nama }}">
+                                    </a>
                                 </div>
-                                <div class="d-flex align-items-center flex-wrap flex-grow-1 mt-n2 mt-lg-n1">
-                                    <div class="single-news d-flex flex-column flex-grow-1 my-lg-0 my-2 pe-3">
-                                        <div class="content-body">
-                                            <h4 class="mt-6">
-                                                <a href="{{ route('artikel.detail', [$var->link]) }}"
-                                                    class="text-gray-900 text-hover-danger">
-                                                    {{ GoogleTranslate::trans($var->nama, app()->getLocale()) }}
-                                                </a>
-                                            </h4>
-                                            <div class="blog-content mt-3">
-                                                <span><i class="lni lni-calendar"></i>
-                                                    <?= helper::tgl_indo(date('Y-m-d', strtotime($var->tgl_publish))) ?>
-                                                </span>
-                                                <span><i class="lni lni-write"></i> {{ $var->penulis }}</span>
-                                                <br />
-                                                <br />
-                                            </div>
-                                        </div>
+                                <div class="flex-grow-1 ms-4">
+                                    <h5 class="fw-bolder mb-1">
+                                        <a href="{{ route('artikel.detail', [$var->link]) }}"
+                                            class="text-dark text-hover-primary">{{ $var->nama }}</a>
+                                    </h5>
+                                    <div class="text-muted small">
+                                        <span><i class="lni lni-calendar me-1"></i>
+                                            {!! Helper::tgl_indo(date('Y-m-d', strtotime($var->tgl_publish))) !!}</span>
+                                        <span class="mx-2">•</span>
+                                        <span><i class="lni lni-user me-1"></i> {{ $var->penulis }}</span>
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                    @endforeach
+                        @endforeach
+
+                    @else
+                        <p class="text-center">Belum ada berita untuk ditampilkan.</p>
+                    @endif
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-5">
+                        {{ $data->links('vendor.pagination.bootstrap-4') }}
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+    <!--end::Content-->
+
     @include('partial.footer')
 @endsection
+
 @section('footer')
     @include('partial.script')
-    <script>
-        $(document).ready(function() {
-            $(".kt_advanced_search_button_1").click(function() {
-                let namadokumen = $("#nama_dokumen").val();
-                let kategori_ = $("#kategori_").val();
-                let tahun_ = $("#tahun_").val();
-                let nomor_ = $("#nomor_").val();
-
-                let tipe_dokumen = $("#tipe_dokumen").val();
-                let status_dokumen = $("#status_dokumen").val();
-                let url = "{{ route('pencarian.pencarian') }}?status_dokumen=" + status_dokumen +
-                    "&tipe_dokumen=" + tipe_dokumen + "&dokumen=" + namadokumen + "&kategori=" + kategori_ +
-                    "&tahun=" + tahun_ + "&nomor=" + nomor_;
-                window.location.href = url
-            });
-        });
-    </script>
 @endsection
