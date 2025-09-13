@@ -57,6 +57,7 @@ Route::get('/statistik/grafik-perbidang', [StatistikController::class, 'perbidan
 Route::get('/statistik/grafik-berlaku-tak-berlaku', [StatistikController::class, 'berlaku_takberlaku'])->name('statistik.berlaku_takberlaku');
 Route::get('/statistik/tahunan-perundangan', [StatistikController::class, 'tahunan_perundangan'])->name('statistik.tahunan_perundangan');
 
+Route::get('/klinik-hukum', [App\Http\Controllers\HomeController::class, 'klinikHukum'])->name('klinik-hukum');
 
 Route::get('//home-download', [DownloadController::class, 'home'])->name('home.download');
 
@@ -120,7 +121,7 @@ Route::get('/videos', [VideoController::class, 'index'])->name('videos');
 
 //redirect registrasi
 Route::group(['prefix' => 'home'], function () {
-    require __DIR__.'/home/home.php';
+    require __DIR__ . '/home/home.php';
 });
 
 Route::get('/sitemap.xml', function () {
@@ -133,13 +134,13 @@ Route::get('/sitemap.xml', function () {
     // add dynamic pages to the sitemap
     $posts = DB::table('berita')->orderBy('tgl', 'desc')->get();
     foreach ($posts as $post) {
-        $sitemap->add(URL::to('artikel/detail/'.$post->link), $post->tgl, '0.8', 'monthly');
+        $sitemap->add(URL::to('artikel/detail/' . $post->link), $post->tgl, '0.8', 'monthly');
     }
 
     // add dynamic pages to the sitemap
     $posts = DB::table('inventarisasi_hukum')->orderBy('created_at', 'desc')->get();
     foreach ($posts as $post) {
-        $sitemap->add(URL::to("inventarisasi-hukum/detail/".$post->link), $post->created_at, '0.8', 'monthly');
+        $sitemap->add(URL::to("inventarisasi-hukum/detail/" . $post->link), $post->created_at, '0.8', 'monthly');
     }
 
     return $sitemap->render('xml');
@@ -183,4 +184,3 @@ Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\ResetPasswordCo
 
 // Submit new password
 Route::post('/reset-password', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
-

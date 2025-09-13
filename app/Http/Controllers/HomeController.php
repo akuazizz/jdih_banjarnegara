@@ -76,8 +76,8 @@ class HomeController extends Controller
         $tgl = array_column($pengunjung, 'tgl');
         $jml = array_column($pengunjung, 'jml');
         $dataVideo = DB::table('video')->whereNull('deleted_at')->where('publish_video', '1')->orderBy('id_video', 'desc')->limit(6)->get();
-        $survey = DB::table('link_survey')->where('name','penilaian_layanan')->first();
-        $survey_gambar = DB::table('link_survey')->where('name','gambar_survey')->first();
+        $survey = DB::table('link_survey')->where('name', 'penilaian_layanan')->first();
+        $survey_gambar = DB::table('link_survey')->where('name', 'gambar_survey')->first();
         $konfigurasi = DB::table('konfigurasi_periode_bankum')->first();
         $tgl_mulai = $konfigurasi->tgl_mulai_periode;
         $tgl_selesai = $konfigurasi->tgl_selesai_periode;
@@ -87,7 +87,7 @@ class HomeController extends Controller
         } else {
             $periode = FALSE;
         }
-        
+
         return view('index')
             ->with('data', $data)
             ->with('terbaru', $terbaru)
@@ -106,7 +106,6 @@ class HomeController extends Controller
             ->with('periode', $periode)
             ->with('survey', $survey)
             ->with('survey_gambar', $survey_gambar);
-            
     }
 
     public function pencarian($dokumen = null, $kategori = null, $tahun = null, $nomor = null)
@@ -124,5 +123,10 @@ class HomeController extends Controller
             'views' => $data[0]->views + 1
         ]);
         return view('page/berita/detail', compact('data'));
+    }
+    public function klinikHukum()
+    {
+        // Cukup tampilkan view-nya saja untuk saat ini
+        return view('page.klinik-hukum');
     }
 }
