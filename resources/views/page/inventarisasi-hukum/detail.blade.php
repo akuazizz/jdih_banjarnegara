@@ -318,9 +318,9 @@
                                     </div>
                                 </div>
                                 {{-- href="{{ route('inventarisasi-hukum.unduh', [encrypt($data[0]->id), $data[0]->singkatan_jenis]) }}" --}}
-                                <a href="{{ route('inventarisasi-hukum.download', [encrypt($data[0]->id)]) }}">
-                                    <button class="btn btn-success"
-                                        data-id="{{ encrypt($data[0]->id) }}">{{ __('Unduh') }}</button>
+                                <a href="{{ route('inventarisasi-hukum.download', [encrypt($data[0]->id)]) }}"
+                                    class="survey-download">
+                                    <button class="btn btn-success">{{ __('Unduh') }}</button>
                                 </a>
                                 <p class="font-sm font-red-intense text-m">
                                     * Klik tombol UNDUH untuk melakukan download atau lihat dokumen dibawah untuk
@@ -352,10 +352,8 @@
                             <div class="tab-pane fade" id="nav-nilai" role="tabpanel"
                                 aria-labelledby="nav-nilai-tab">
                                 <center>
-                                    <h4>Silahkan nilai kami lebih lanjut melalui tautan berikut :</h4>
-                                    <a href="{{ $survey->link }}" class="mt-3">
-                                        <button class="btn btn-info">Form Penilaian</button>
-                                    </a>
+                                    <h4>Silahkan nilai kepuasan Anda:</h4>
+                                    <button type="button" class="btn btn-info mt-3 survey-only">Beri Penilaian</button>
                                 </center>
                             </div>
 
@@ -369,48 +367,144 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // $(".survey").on("click", function(e) {
-            //     var id = $(this).data('id');
-            //     var buttons = $('<div>')
-            //         .append(createButton(id, 'puas'))
-            //         .append(createButton(id, 'cukup'))
-            //         .append(createButton(id, 'kurang'))
-            //         .append(createButton(id, 'tidak'));
+        let surveySubmitting = false;
 
-            //     e.preventDefault();
-            //     Swal.fire({
-            //         title: "Nilai Kami",
-            //         html: buttons,
-            //         showConfirmButton: false,
-            //         timer: 3000,
-            //         timerProgressBar: true,
-            //         background: 'white',
-            //     });
-            // });
+        $(document).ready(function() {
+            $(".survey-only").on("click", function(e) {
+                e.preventDefault();
+                showSurveyModal();
+            });
+
+            $(".survey-download").on("click", function(e) {
+                e.preventDefault();
+                const downloadUrl = $(this).attr('href');
+                showSurveyModal(downloadUrl);
+            });
         });
 
-        function createButton(id, text) {
-            const baseUrl = window.location.protocol + '//' + window.location.host;
-            if (text == 'puas') {
-                return $(
-                    `<a href="${baseUrl}/inventarisasi-hukum/review_score/${id}/${text}"><img src="${baseUrl}/survey/happy.png" style="margin:5px;"></a>`
-                );
-            } else if (text == 'cukup') {
-                return $(
-                    `<a href="${baseUrl}/inventarisasi-hukum/review_score/${id}/${text}"><img src="${baseUrl}/survey/smile.png" style="margin:5px;"></a>`
-                );
-            } else if (text == 'kurang') {
-                return $(
-                    `<a href="${baseUrl}/inventarisasi-hukum/review_score/${id}/${text}"><img src="${baseUrl}/survey/neutral.png" style="margin:5px;"></a>`
-                );
-            } else {
-                return $(
-                    `<a href="${baseUrl}/inventarisasi-hukum/review_score/${id}/${text}"><img src="${baseUrl}/survey/angry.png" style="margin:5px;"></a>`
-                );
+        $(document).on("click", ".survey-rate", function(e) {
+            e.preventDefault();
+            if (surveySubmitting) {
+                return;
             }
+            surveySubmitting = true;
+
+            const rating = $(this).data('rating');
+            const downloadUrl = $(this).data('download');
+            const baseUrl = window.location.protocol + '//' + window.location.host;
+
+            $.ajax({
+                url: `${baseUrl}/inventarisasi-hukum/review_score`,
+                method: 'POST',
+                data: {
+                    status: rating
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            }).done(function() {
+                const baseUrl = window.location.protocol + '//' + window.location.host;
+                Swal.fire({
+                    title: "Terima kasih!",
+                    html: `<div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                        <img src="${baseUrl}/survey/happy.png" alt="Success" style="width:56px;height:56px;">
+                        <div>Penilaian Anda sudah kami terima.</div>
+                    </div>`,
+                    timer: 1500,
+                    showConfirmButton: false,
+                    background: '#ffffff',
+                    backdrop: true,
+                    customClass: {
+                        popup: 'survey-popup'
+                    }
+                }).then(function() {
+                    if (downloadUrl) {
+                        window.location.href = downloadUrl;
+                    } else {
+                        surveySubmitting = false;
+                    }
+                });
+            }).fail(function() {
+                surveySubmitting = false;
+                Swal.fire({
+                    title: "Gagal",
+                    text: "Penilaian belum tersimpan. Silakan coba lagi.",
+                    icon: "error"
+                });
+            });
+        });
+
+        function showSurveyModal(downloadUrl = '') {
+            const buttons = $('<div class="survey-options">')
+                .append(createButton('puas', downloadUrl))
+                .append(createButton('cukup', downloadUrl))
+                .append(createButton('kurang', downloadUrl))
+                .append(createButton('tidak', downloadUrl));
+
+            Swal.fire({
+                title: "Nilai Kepuasan",
+                html: buttons,
+                showConfirmButton: false,
+                showCloseButton: true,
+                allowOutsideClick: true,
+                width: 560,
+                background: '#ffffff',
+                backdrop: true,
+                customClass: {
+                    popup: 'survey-popup'
+                }
+            });
+        }
+
+        function createButton(text, downloadUrl) {
+            const baseUrl = window.location.protocol + '//' + window.location.host;
+            const safeDownloadUrl = downloadUrl || '';
+            return $(
+                `<button type="button" class="survey-rate" data-rating="${text}" data-download="${safeDownloadUrl}" style="background:transparent;border:0;padding:0;margin:6px;text-align:center;">
+                    <img src="${baseUrl}/survey/${iconName(text)}.png" style="margin:5px;">
+                    <div style="font-size:12px;color:#444;">${labelText(text)}</div>
+                </button>`
+            );
+        }
+
+        function iconName(text) {
+            if (text === 'puas') {
+                return 'happy';
+            } else if (text === 'cukup') {
+                return 'smile';
+            } else if (text === 'kurang') {
+                return 'neutral';
+            }
+            return 'angry';
+        }
+
+        function labelText(text) {
+            if (text === 'puas') {
+                return 'Puas';
+            } else if (text === 'cukup') {
+                return 'Cukup';
+            } else if (text === 'kurang') {
+                return 'Kurang';
+            }
+            return 'Tidak Puas';
         }
     </script>
+
+    <style>
+        .survey-popup {
+            background: #ffffff !important;
+        }
+        .swal2-container {
+            background: rgba(0, 0, 0, 0.45) !important;
+        }
+        .survey-options {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 
 </section>
 @include('partial.footer')

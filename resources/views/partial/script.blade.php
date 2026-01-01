@@ -46,22 +46,74 @@
     let overlayLeft = document.querySelector(".overlay-left");
     let sidebarClose = document.querySelector(".sidebar-close .close");
 
-    overlayLeft.addEventListener("click", function () {
-        sidebarLeft.classList.toggle("open");
-        overlayLeft.classList.toggle("open");
-    });
-    sidebarClose.addEventListener("click", function () {
-        sidebarLeft.classList.remove("open");
-        overlayLeft.classList.remove("open");
-    });
+    if (overlayLeft) {
+        overlayLeft.addEventListener("click", function () {
+            if (sidebarLeft) sidebarLeft.classList.toggle("open");
+            overlayLeft.classList.toggle("open");
+        });
+    }
+    if (sidebarClose) {
+        sidebarClose.addEventListener("click", function () {
+            if (sidebarLeft) sidebarLeft.classList.remove("open");
+            if (overlayLeft) overlayLeft.classList.remove("open");
+        });
+    }
 
     // ===== navbar nine sideMenu
     let sideMenuLeftNine = document.querySelector(".navbar-nine .menu-bar");
 
-    sideMenuLeftNine.addEventListener("click", function () {
-        sidebarLeft.classList.add("open");
-        overlayLeft.classList.add("open");
+    if (sideMenuLeftNine) {
+        sideMenuLeftNine.addEventListener("click", function () {
+            if (sidebarLeft) sidebarLeft.classList.add("open");
+            if (overlayLeft) overlayLeft.classList.add("open");
+        });
+    }
+
+    // Auto-close navbar collapse functionality
+    $(document).ready(function() {
+        // Listen to Bootstrap collapse events to handle toggler animation
+        $('#navbarOne').on('show.bs.collapse', function() {
+            $('.navbar-toggler').addClass('active');
+        });
+
+        $('#navbarOne').on('hide.bs.collapse', function() {
+            $('.navbar-toggler').removeClass('active');
+        });
+
+        // Auto-close navbar when clicking on menu links in mobile view
+        if (window.innerWidth < 992) {
+            $('.navbar-nav .nav-item > a').on('click', function() {
+                // Only close if it's a direct link (not a dropdown toggle with data-bs-toggle)
+                if (!$(this).attr('data-bs-toggle')) {
+                    $('.navbar-collapse').collapse('hide');
+                }
+            });
+
+            // Also close when clicking on sub-menu links
+            $('.navbar-nav .sub-menu a').on('click', function() {
+                $('.navbar-collapse').collapse('hide');
+            });
+        }
+
+        // Handle window resize - reset navbar state
+        $(window).on('resize', function() {
+            if (window.innerWidth >= 992) {
+                if ($('.navbar-collapse').hasClass('show')) {
+                    $('.navbar-collapse').collapse('hide');
+                }
+            }
+        });
+
+        // Close navbar when clicking outside
+        $(document).on('click', function(e) {
+            if (window.innerWidth < 992) {
+                if (!$(e.target).closest('.navbar-area').length &&
+                    $('.navbar-collapse').hasClass('show')) {
+                    $('.navbar-collapse').collapse('hide');
+                }
+            }
+        });
     });
-    
+
 
 </script>

@@ -66,6 +66,8 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 
+    <link rel="shortcut icon" href="{{asset('jdihn.png')}}" />
+
 <script>
     (function(w, d, s, l, i) {
         w[l] = w[l] || [];

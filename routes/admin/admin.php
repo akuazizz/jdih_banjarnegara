@@ -23,7 +23,7 @@ Route::group(
         'prefix'        => 'admin',
         'namespace'     => 'admin.',
         'as'            => 'admin.',
-        'middleware' => ['web','auth','role:superadmin']
+        'middleware' => ['web', 'auth', 'role:superadmin']
     ],
 
     function () {
@@ -35,13 +35,13 @@ Route::group(
         Route::post('/master-user-update-porses', [UserController::class, 'update_proses'])->name('master.user.update.proses');
     }
 );
-    
+
 Route::group(
     [
         'prefix'        => 'admin',
         'namespace'     => 'admin.',
         'as'            => 'admin.',
-        'middleware' => ['web','auth','role:superadmin,admin']
+        'middleware' => ['web', 'auth', 'role:superadmin,admin']
     ],
 
     function () {
@@ -64,7 +64,19 @@ Route::group(
         Route::post('/master-file-delete', [Filecontroller::class, 'delete'])->name('master.file.delete');
         Route::post('/master-file-tambah-store', [Filecontroller::class, 'store'])->name('master.file.tambah.store');
         Route::post('/master-file-update-proccess', [Filecontroller::class, 'update_proses'])->name('master.file.update.proses');
-        
+
+        // Putusan routes
+        Route::get('/master-produk-hukum-putusan', [Filecontroller::class, 'indexPutusan'])->name('master.file.putusan');
+        Route::get('/master-produk-hukum-putusan-detail/{id}', [Filecontroller::class, 'detailPutusan'])->name('master.file.putusan.detail');
+        Route::get('/master-produk-hukum-putusan-proses/{id}', [Filecontroller::class, 'prosesPutusan'])->name('master.file.putusan.proses');
+        Route::get('/master-produk-hukum-putusan-publish/{id}', [Filecontroller::class, 'publishPutusan'])->name('master.file.putusan.publish');
+        Route::get('/master-produk-hukum-putusan-tolak/{id}', [Filecontroller::class, 'tolakPutusan'])->name('master.file.putusan.tolak');
+        Route::get('/master-produk-hukum-putusan-tambah', [Filecontroller::class, 'tambahPutusan'])->name('master.file.putusan.tambah');
+        Route::post('/master-file-putusan-tambah-store', [Filecontroller::class, 'storePutusan'])->name('master.file.putusan.tambah.store');
+        Route::get('/master-produk-hukum-putusan-update/{id}', [Filecontroller::class, 'updatePutusan'])->name('master.file.putusan.update');
+        Route::post('/master-file-putusan-update-proccess', [Filecontroller::class, 'updatePutusanProses'])->name('master.file.putusan.update.proses');
+        Route::post('/master-file-putusan-datatable', [Filecontroller::class, 'datatablePutusan'])->name('master.file.putusan.datatable');
+        Route::post('/master-file-putusan-delete', [Filecontroller::class, 'deletePutusan'])->name('master.file.putusan.delete');
 
         Route::get('/master-berita', [BeritaController::class, 'index'])->name('master.berita');
         Route::get('/master-berita-tambah', [BeritaController::class, 'create'])->name('master.berita.tambah');
@@ -146,7 +158,6 @@ Route::group(
         Route::post('/master-video-update', [VideoController::class, 'update'])->name('master.video.update');
 
         Route::post('/master-video-publish', [VideoController::class, 'publish'])->name('master.video.publish');
-
     }
 );
 
@@ -155,7 +166,7 @@ Route::group(
         'prefix'        => 'admin',
         'namespace'     => 'admin.',
         'as'            => 'admin.',
-        'middleware' => ['web','auth']
+        'middleware' => ['web', 'auth']
     ],
 
     function () {

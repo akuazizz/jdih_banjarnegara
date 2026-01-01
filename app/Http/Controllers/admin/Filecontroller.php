@@ -14,12 +14,17 @@ use Illuminate\Support\Facades\File;
 
 class Filecontroller extends Controller
 {
+    private function getKategoriIdByLink($link)
+    {
+        return Kategori::where('link', $link)->value('id');
+    }
+
     public function index()
     {
         $kategori = Kategori::get();
         return view('admin.page.file.file', compact('kategori'));
     }
-    
+
     public function detail($id = null)
     {
         $data = InventarisasiHukum::where('id', $id)->first();
@@ -40,13 +45,13 @@ class Filecontroller extends Controller
         $bidang = DB::table('bidang_hukum')->get();
         $abstrak = DB::table('abstrak')->where('id_ph', $id)->first();
         $bahasa = DB::table('master_bahasa')->get();
-     
+
         return view('admin.page.file.file_update', compact('data', 'kategori', 'bidang', 'abstrak', 'bahasa'));
     }
 
     public function datatable(Request $request)
     {
-        $model = DB::table('inventarisasi_hukum');
+        $model = DB::table('inventarisasi_hukum')->where('tipe_dokumen', '!=', 4);
 
         if ($request->judul != '') $model->where('content', 'like', '%' . $request->judul . '%');
         if ($request->nomor != '') $model->where('no_peraturan', $request->nomor);
@@ -332,6 +337,289 @@ class Filecontroller extends Controller
             return response()->json(['status' => 'success', 'message' => 'Hapus Produk Hukum berhasil'], 200);
         } else {
             return response()->json(['status' => 'error', 'message' => 'tambah Produk hukum baru gagal'], 400);
+        }
+    }
+
+    // Putusan methods
+    public function indexPutusan()
+    {
+        return view('admin.page.file.file_putusan');
+    }
+
+    public function datatablePutusan(Request $request)
+    {
+        $model = DB::table('inventarisasi_hukum')->where('tipe_dokumen', 4);
+
+        if ($request->judul != '') $model->where('content', 'like', '%' . $request->judul . '%');
+        if ($request->nomor != '') $model->where('no_peraturan', $request->nomor);
+        if ($request->tahun != '') $model->where('tahun_diundang', $request->tahun);
+
+        return DataTables::query($model)
+            ->addColumn('action', function ($data) {
+                $html = '<a href="#" class="btn btn-sm btn-danger hapusfile" style="margin:5px;" id="' . $data->id . '">Hapus </a>';
+                $html .= "<a href='" . route('admin.master.file.putusan.update', [$data->id]) . "' class='btn btn-sm btn-success' style='margin:5px;' id='editfile'>Edit </a>";
+                $html .= "<a href='" . route('admin.master.file.putusan.detail', [$data->id]) . "' class='btn btn-sm btn-primary' style='margin:5px;' id='detailfile'>Detail </a>";
+                if (session('role') == 'validator' || session('role') == 'superadmin') {
+                    $html .= "<a href='" . route('admin.master.file.putusan.proses', [$data->id]) . "' class='btn btn-sm btn-info' style='margin:5px;' id='detailproses'>Proses </a>";
+                }
+                return $html;
+            })
+            ->addColumn('publish', function ($data) {
+                if ($data->publish == '1') {
+                    $html_1 = "<a class='btn btn-sm btn-success' style='margin:5px;' id='aktif'>Aktif </a>";
+                } elseif ($data->publish == '2') {
+                    $html_1 = "<a class='btn btn-sm btn-warning' style='margin:5px;' id=''>Menunggu Konfirmasi </a>";
+                } elseif ($data->publish == '3') {
+                    $html_1 = "<a class='btn btn-sm btn-danger' style='margin:5px;' id=''>Validasi Ditolak </a>";
+                } else {
+                    $html_1 = "<a class='btn btn-sm btn-danger' style='margin:5px;' id='tidak_aktif'>Tidak Aktif </a>";
+                }
+                return $html_1;
+            })
+            ->rawColumns(['publish', 'action'])
+            ->addIndexColumn()
+            ->toJson();
+    }
+
+    public function tambahPutusan()
+    {
+        $bidang = DB::table('bidang_hukum')->get();
+        $bahasa = DB::table('master_bahasa')->get();
+
+        return view('admin.page.file.tambah_putusan', compact('bidang', 'bahasa'));
+    }
+
+    public function storePutusan(Request $request)
+    {
+        $id = Auth::id();
+        $putusanKategoriId = $this->getKategoriIdByLink('putusan');
+
+        $no1link = str_replace('/', '-', $request->no_peraturan);
+        $noPeraturanlink = str_replace('.', '-', $no1link);
+
+        $no1 = str_replace('/', '_', $request->no_peraturan);
+        $noPeraturan = str_replace('.', '_', $no1);
+
+        if ($request->file != 'undefined') {
+            $file = $request->file;
+            $file_name = $file->getClientOriginalName();
+            $file_size = round($file->getSize() / 1024);
+            $file_ex = $file->getClientOriginalExtension();
+
+            $destinationPath = public_path() . "/produk_hukum/Putusan/";
+            if (!file_exists($destinationPath)) {
+                File::makeDirectory($destinationPath, $mode = 0777, true, true);
+            }
+
+            if (!in_array($file_ex, array('pdf'))) {
+                return response()->json(['status' => 'error', 'message' => 'jenis file yang di ijinkan hanya pdf'], 400);
+            }
+            $upf = $file->move($destinationPath, $file_name);
+            $fu = "produk_hukum/Putusan/" . $file_name;
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'File putusan wajib diupload'], 400);
+        }
+
+        $link = "putusan_" . $noPeraturanlink . "_th_" . $request->tahun;
+
+        $abstrak = $request->file('abstrak');
+        $abstrakname = "";
+
+        if ($abstrak) {
+            $destinationPathAbstrak = public_path() . "/produk_hukum/abstrak/";
+            if (!file_exists($destinationPathAbstrak)) {
+                File::makeDirectory($destinationPathAbstrak, $mode = 0777, true, true);
+            }
+            $abstrakname = "abstrak_putusan_" . $noPeraturanlink . "_th_" . $request->tahun . ".pdf";
+            $abstrak->move($destinationPathAbstrak, $abstrakname);
+        }
+
+        $tambah = InventarisasiHukum::create([
+            'tipe_dokumen' => 4,
+            'jenis' => $putusanKategoriId,
+            'content' => $request->judul,
+            'tajuk_entri_utama' => $request->teu,
+            'no_peraturan' => $request->no_peraturan,
+            'jenis_peradilan' => $request->jenis_peradilan,
+            'singkatan_jenis_peradilan' => $request->singkatan_jenis_peradilan,
+            'tempat_peradilan' => $request->tempat_peradilan,
+            'tgl_dibacakan' => date('Y-m-d', strtotime($request->tgl_dibacakan)),
+            'sumber' => $request->sumber,
+            'file_tags' => implode(", ", $request->subjek),
+            'status_putusan' => $request->status_putusan,
+            'bahasa' => $request->bahasa,
+            'bid_hukum' => $request->bidang,
+            'lokasi' => $request->lokasi,
+            'file' => $file_name ?? "",
+            'file_url' => $fu ?? "",
+            'file_date' => date('Y-m-d H:i:s'),
+            'file_author' => $request->author,
+            'tahun_diundang' => $request->tahun,
+            'link' => $link,
+            'publish' => 2,
+            'unduh' => 0,
+            'view' => 0,
+            'abstrak' => $abstrakname,
+        ]);
+
+        if ($abstrakname) {
+            DB::table('abstrak')->insert([
+                'id_ph' => $tambah->id,
+                'file_abstrak' => $abstrakname
+            ]);
+        }
+
+        if ($tambah) {
+            return response()->json(['status' => 'success', 'message' => 'tambah Putusan baru berhasil'], 200);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'tambah Putusan baru gagal'], 400);
+        }
+    }
+
+    public function updatePutusan($id = null)
+    {
+        $data = InventarisasiHukum::where('id', $id)->first();
+        $bidang = DB::table('bidang_hukum')->get();
+        $bahasa = DB::table('master_bahasa')->get();
+
+        return view('admin.page.file.file_update_putusan', compact('data', 'bidang', 'bahasa'));
+    }
+
+    public function updatePutusanProses(Request $request)
+    {
+        $putusanKategoriId = $this->getKategoriIdByLink('putusan');
+        $file = $request->file;
+        if ($file != 'undefined') {
+            $file_ex = $file->getClientOriginalExtension();
+        }
+
+        $ph = InventarisasiHukum::where('id', $request->idph);
+
+        $no1link = str_replace('/', '-', $request->no_peraturan);
+        $noPeraturanlink = str_replace('.', '-', $no1link);
+
+        $getid = $ph->first();
+        $getabstrak = DB::table('abstrak')->where('id_ph', $request->idph)->first();
+
+        if ($file != 'undefined') {
+            if (!in_array($file_ex, array('pdf'))) {
+                return response()->json(['status' => 'error', 'message' => 'jenis file yang di ijinkan hanya pdf'], 400);
+            }
+        }
+
+        $destinationPath = public_path() . "/produk_hukum/Putusan/";
+        if (!file_exists($destinationPath)) {
+            File::makeDirectory($destinationPath, $mode = 0777, true, true);
+        }
+        $destinationPathAbstrak = public_path() . "/produk_hukum/abstrak/";
+
+        $abstrak = $request->file('abstrak');
+        if ($abstrak) {
+            $abstrakname = "abstrak_putusan_" . $noPeraturanlink . "_th_" . $request->tahun . ".pdf";
+            $abstrak->move($destinationPathAbstrak, $abstrakname);
+        } else {
+            $abstrakname = $getid->abstrak;
+        }
+
+        if ($file != 'undefined') {
+            $file_name = $file->getClientOriginalName();
+            $file->move($destinationPath, $file_name);
+        } else {
+            if (!$getid->file) {
+                return response()->json(['status' => 'error', 'message' => 'File putusan wajib diupload'], 400);
+            }
+            $file_name = $getid->file;
+        }
+
+        $fu = "produk_hukum/Putusan/" . $file_name;
+
+        $tags = implode(", ", $request->subjek);
+
+        $tambah = $ph->update([
+            'tipe_dokumen' => 4,
+            'jenis' => $putusanKategoriId ?: $getid->jenis,
+            'content' => $request->judul,
+            'tajuk_entri_utama' => $request->teu,
+            'no_peraturan' => $request->no_peraturan,
+            'jenis_peradilan' => $request->jenis_peradilan,
+            'singkatan_jenis_peradilan' => $request->singkatan_jenis_peradilan,
+            'tempat_peradilan' => $request->tempat_peradilan,
+            'tgl_dibacakan' => date('Y-m-d', strtotime($request->tgl_dibacakan)),
+            'sumber' => $request->sumber,
+            'file_tags' => $tags,
+            'status_putusan' => $request->status_putusan,
+            'bahasa' => $request->bahasa,
+            'bid_hukum' => $request->bidang,
+            'lokasi' => $request->lokasi,
+            'file' => $file_name,
+            'file_url' => $fu,
+            'file_date' => date('Y-m-d H:i:s'),
+            'file_author' => $request->author,
+            'tahun_diundang' => $request->tahun,
+            'publish' => 2,
+            'abstrak' => $abstrakname,
+        ]);
+
+        if ($getabstrak != '') {
+            DB::table('abstrak')->where('id_ph', $request->idph)->update([
+                'file_abstrak' => $abstrakname
+            ]);
+        } elseif ($abstrakname) {
+            DB::table('abstrak')->insert([
+                'id_ph' => $request->idph,
+                'file_abstrak' => $abstrakname
+            ]);
+        }
+
+        if ($tambah) {
+            return response()->json(['status' => 'success', 'message' => 'Update data Putusan berhasil'], 200);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Update data Putusan gagal'], 400);
+        }
+    }
+
+    public function detailPutusan($id = null)
+    {
+        $data = InventarisasiHukum::where('id', $id)->first();
+        $bahasa = DB::table('master_bahasa')->where('id', $data->bahasa)->value('bahasa');
+        return view('admin.page.file.file_detail_putusan', compact('data', 'bahasa'));
+    }
+
+    public function prosesPutusan($id = null)
+    {
+        $data = InventarisasiHukum::where('id', $id)->first();
+        $bahasa = DB::table('master_bahasa')->where('id', $data->bahasa)->value('bahasa');
+        return view('admin.page.file.file_proses_putusan', compact('data', 'bahasa'));
+    }
+
+    public function publishPutusan($id)
+    {
+        $data = InventarisasiHukum::where('id', $id)->first();
+        if ($data->publish == '1') {
+            $data->publish = '0';
+        } else {
+            $data->publish = '1';
+        }
+        $data->save();
+        return redirect()->back();
+    }
+
+    public function tolakPutusan($id)
+    {
+        $data = InventarisasiHukum::where('id', $id)->first();
+        $data->publish = '3';
+        $data->save();
+        return redirect()->back();
+    }
+
+    public function deletePutusan(Request $req)
+    {
+        $id = $req->idf;
+        $hapus = InventarisasiHukum::where('id', $id)->delete();
+        if ($hapus) {
+            return response()->json(['status' => 'success', 'message' => 'Hapus Putusan berhasil'], 200);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Hapus Putusan gagal'], 400);
         }
     }
 }

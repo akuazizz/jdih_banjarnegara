@@ -29,7 +29,7 @@ class InventarisasiHukumController extends Controller
             ->orderBy('no_peraturan', 'DESC')
             ->paginate(10);
         $kategori = DB::table("kategori")->get();
-        
+
         return view('page/inventarisasi-hukum/index', compact('data', 'kategori'));
     }
 
@@ -85,8 +85,13 @@ class InventarisasiHukumController extends Controller
                 'artikel-bidang-hukum'
             ]
         ];
-       
-        return view('page/inventarisasi-hukum/detail', compact('data', 'survey', 'kategori'));
+
+        // Check if this is a putusan document and use appropriate view
+        if ($data[0]->tipe_dokumen == 4) {
+            return view('page/inventarisasi-hukum/detail_putusan', compact('data', 'survey', 'kategori'));
+        } else {
+            return view('page/inventarisasi-hukum/detail', compact('data', 'survey', 'kategori'));
+        }
     }
 
     public function unduh($id, $jenis)
@@ -233,6 +238,36 @@ class InventarisasiHukumController extends Controller
         return redirect()->back();
     }
 
+    public function review_score_post(Request $request)
+    {
+        $status = $request->input('status');
+        if (!in_array($status, ['puas', 'cukup', 'kurang', 'tidak'], true)) {
+            return response()->json(['message' => 'Invalid status'], 422);
+        }
+
+        $sk = DB::table('survei_kepuasan')->where('id', 1);
+        $getsk = $sk->first();
+        if ($status == 'puas') {
+            $sk->update([
+                'sangat_puas' => $getsk->sangat_puas + 1
+            ]);
+        } elseif ($status == 'cukup') {
+            $sk->update([
+                'puas' => $getsk->puas + 1
+            ]);
+        } elseif ($status == 'kurang') {
+            $sk->update([
+                'kurang_puas' => $getsk->kurang_puas + 1
+            ]);
+        } else {
+            $sk->update([
+                'tidak_puas' => $getsk->tidak_puas + 1
+            ]);
+        }
+
+        return response()->json(['ok' => true]);
+    }
+
     public function abstrak($id, $format)
     {
         $id = decrypt($id);
@@ -310,6 +345,20 @@ class InventarisasiHukumController extends Controller
         $param = DB::table("kategori")->where('link', $param)->first();
 
         return view('page/inventarisasi-hukum/index', compact('data', 'title', 'total', 'kategori', 'param'));
+    }
+
+    public function putusan()
+    {
+        $data = InventarisasiHukum::select(['kategori.nama', 'inventarisasi_hukum.*'])
+            ->leftJoin('kategori', 'kategori.id', '=', 'inventarisasi_hukum.jenis')
+            ->where('tipe_dokumen', 4)
+            ->where('publish', 1)
+            ->orderBy('tahun_diundang', 'desc')
+            ->orderBy('no_peraturan', 'DESC')
+            ->paginate(10);
+        $kategori = DB::table("kategori")->get();
+
+        return view('page/inventarisasi-hukum/putusan', compact('data', 'kategori'));
     }
 
     public function subjek($param)

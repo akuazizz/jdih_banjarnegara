@@ -29,7 +29,7 @@
                                         <div class="card-header border-0 py-10 d-flex flex-column">
 											<center>
                                                 <h1 style="font-size:30px;">VISI DAN MISI</h1>
-                                                <img src="{{ asset('logo.jpg') }}" style="width:20%;">
+                                                <img src="{{ asset('media/logo_jdih_banjarnegara.png') }}" style="width:20%;">
                                             </center>
 										</div>
 										<!--end::Header-->

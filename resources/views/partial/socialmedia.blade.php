@@ -16,7 +16,17 @@
                             </div>
                             <div class="cat-desc text-left">
                                 <p class="text-l ml-2 self-center text-white">
-                                    <br>{{ GoogleTranslate::trans('Bagian Hukum Pemerintah Kabupaten Banjarnegara', app()->getLocale()) }}
+                                    <br>@php
+                                        try {
+                                            $translated = GoogleTranslate::trans(
+                                                'Bagian Hukum Pemerintah Kabupaten Banjarnegara',
+                                                app()->getLocale(),
+                                            );
+                                            echo $translated;
+                                        } catch (\Exception $e) {
+                                            echo 'Bagian Hukum Pemerintah Kabupaten Banjarnegara';
+                                        }
+                                    @endphp
                                 </p>
                             </div>
                         </div>
@@ -24,7 +34,13 @@
                     <div class="col-lg-2 col-md-6 col-12">
 
                         <div class="footer-widget f-link">
-                            <h5 class="text-white">{{ GoogleTranslate::trans('Social Media', app()->getLocale()) }}</h5>
+                            <h5 class="text-white">@php
+                                try {
+                                    echo GoogleTranslate::trans('Social Media', app()->getLocale());
+                                } catch (\Exception $e) {
+                                    echo 'Social Media';
+                                }
+                            @endphp</h5>
                             <ul class="p-1em">
                                 <!-- <li>
                                     <a href="https://www.youtube.com/channel/UCFFZo4PAotie8YCr49chvqg" target="_blank">
@@ -107,7 +123,13 @@
                     <div class="col-lg-2 col-md-6 col-12">
 
                         <div class="footer-widget f-link">
-                            <h5 class="text-white">{{ GoogleTranslate::trans('Address', app()->getLocale()) }}</h5>
+                            <h5 class="text-white">@php
+                                try {
+                                    echo GoogleTranslate::trans('Address', app()->getLocale());
+                                } catch (\Exception $e) {
+                                    echo 'Address';
+                                }
+                            @endphp</h5>
                             <ul class="p-1em">
 
                                 <li>
@@ -143,11 +165,22 @@
                                     </a>
                                 </li>
                             </ul>
+                            <div class="mt-3">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d989.1555556794428!2d109.69550107816632!3d-7.3961577460404415!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7aa91649242607%3A0x7cf16e25160c9389!2sSekretariat%20Daerah%20Kabupaten%20Banjarnegara!5e0!3m2!1sid!2sid!4v1767175919893!5m2!1sid!2sid"
+                                    width="100%" height="150" style="border:0; max-width: 600px;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 col-12">
                         <div class="footer-widget newsletter">
-                            <h5 class="text-white">{{ GoogleTranslate::trans('Visitor', app()->getLocale()) }}</h5>
+                            <h5 class="text-white">@php
+                                try {
+                                    echo GoogleTranslate::trans('Visitor', app()->getLocale());
+                                } catch (\Exception $e) {
+                                    echo 'Visitor';
+                                }
+                            @endphp</h5>
                             <table style="color:white;width:50%;padding:5px;">
                                 <tr style=" solid;padding:5px;">
                                     <th style=" solid;padding:5px;">Daily</th>
@@ -175,8 +208,13 @@
                                 <tr>
                             </table>
                             <hr>
-                            <h5 class="text-white">{{ GoogleTranslate::trans('Survei Kepuasan', app()->getLocale()) }}
-                            </h5>
+                            <h5 class="text-white">@php
+                                try {
+                                    echo GoogleTranslate::trans('Survei Kepuasan', app()->getLocale());
+                                } catch (\Exception $e) {
+                                    echo 'Survei Kepuasan';
+                                }
+                            @endphp</h5>
                             <table style=" solid;color:white;width:50%;padding:5px;">
                                 <tr style=" solid;padding:5px;">
                                     <th style=" solid;padding:5px;">Sangat Puas</th>

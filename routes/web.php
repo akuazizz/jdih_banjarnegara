@@ -57,8 +57,6 @@ Route::get('/statistik/grafik-perbidang', [StatistikController::class, 'perbidan
 Route::get('/statistik/grafik-berlaku-tak-berlaku', [StatistikController::class, 'berlaku_takberlaku'])->name('statistik.berlaku_takberlaku');
 Route::get('/statistik/tahunan-perundangan', [StatistikController::class, 'tahunan_perundangan'])->name('statistik.tahunan_perundangan');
 
-Route::get('/klinik-hukum', [App\Http\Controllers\HomeController::class, 'klinikHukum'])->name('klinik-hukum');
-
 Route::get('//home-download', [DownloadController::class, 'home'])->name('home.download');
 
 // visi misi

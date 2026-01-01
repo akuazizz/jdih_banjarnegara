@@ -38,9 +38,17 @@ class InventarisasiHukum extends Model
         'no_panggil',
         'no_induk_buku',
         'tipe_dokumen',
-        'pemrakarsa','penandatangan','hasil_uji_materi','tajuk_entri_utama','file_custom_status',
+        'pemrakarsa',
+        'penandatangan',
+        'hasil_uji_materi',
+        'tajuk_entri_utama',
+        'file_custom_status',
         'lokasi',
-        'deskripsi_fisik'
+        'deskripsi_fisik',
+        'jenis_peradilan',
+        'singkatan_jenis_peradilan',
+        'tempat_peradilan',
+        'tgl_dibacakan',
+        'status_putusan'
     ];
-
 }

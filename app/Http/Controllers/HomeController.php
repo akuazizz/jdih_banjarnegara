@@ -13,23 +13,34 @@ class HomeController extends Controller
 
     public function index()
     {
-        // Cek berdasarkan IP, apakah user sudah pernah mengakses hari ini
-        $cekip = DB::table('visitor')->where('ip', $_SERVER['REMOTE_ADDR'])->first();
-        if ($cekip == '') {
+        // Cek berdasarkan IP dan tanggal, apakah user sudah mengakses hari ini
+        $ip_address = request()->ip();
+        $today = date('Y-m-d');
+
+        $cekip = DB::table('visitor')
+            ->where('ip', $ip_address)
+            ->where('date', $today)
+            ->first();
+
+        if ($cekip == null) {
+            // Insert visitor baru untuk hari ini
             DB::table('visitor')->insert([
-                'ip' => $_SERVER['REMOTE_ADDR'],
+                'ip' => $ip_address,
                 'hits' => 1,
-                'date' => date('Y-m-d'),
+                'date' => $today,
                 'online' => time(),
                 'time' => date('Y-m-d H:i:s')
             ]);
         } else {
-            DB::table('visitor')->where('ip', $_SERVER['REMOTE_ADDR'])->update([
-                'hits' => $cekip->hits + 1,
-                'date' => date('Y-m-d'),
-                'online' => time(),
-                'time' => date('Y-m-d H:i:s')
-            ]);
+            // Update hits untuk visitor yang sudah ada hari ini
+            DB::table('visitor')
+                ->where('ip', $ip_address)
+                ->where('date', $today)
+                ->update([
+                    'hits' => $cekip->hits + 1,
+                    'online' => time(),
+                    'time' => date('Y-m-d H:i:s')
+                ]);
         }
         $data = Berita::select(['berita.*'])
             ->orderBy('tgl_publish', 'DESC')

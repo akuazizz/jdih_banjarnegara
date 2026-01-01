@@ -49,7 +49,7 @@ class PencarianController extends Controller
             $pdf->where('content', 'like', '%' . $dokumen . '%');
         }
         if ($kategori_pencarian != '') {
-            $pdf->where('kategori.link', 'like', '%' . $kategori_pencarian . '%');
+            $pdf->where('kategori.link', $kategori_pencarian);
         }
         if ($tahun != '') {
             $pdf->where('tahun_diundang', $tahun);

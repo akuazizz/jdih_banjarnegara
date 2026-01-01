@@ -16,6 +16,8 @@
         <link href="{{ asset('css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
         <!-- <link rel="stylesheet" href="{{ asset('css/custom.css') }}"> -->
 
+    <link rel="shortcut icon" href="{{asset('jdihn.png')}}" />
+
         <style>
             body {
                 background-color: #f9fafb !important;

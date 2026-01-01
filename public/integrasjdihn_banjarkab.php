@@ -3,9 +3,9 @@ header("Content-Type: application/json");
 
 // Konfigurasi Basis Data
 $servername = "localhost";
-$username = "jdihbanjarnegarakabgoid";
-$password = "JmEKrYemkF5EKB6m";
-$dbname = "jdih.banjarnegarakab.go.id";
+$username = "jdihbanjarnegara";
+$password = "98a9f566edd3d8";
+$dbname = "jdihbanjarnegara";
 $port = "3306";
 
 // Koneksi ke Basis Data

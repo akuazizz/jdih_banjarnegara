@@ -20,9 +20,11 @@ Route::group(
         Route::get('unduh/{id}/{jenis}', [InventarisasiHukumController::class, 'unduh'])->name('unduh');
         Route::get('katalog', [KatalogController::class, 'index'])->name('katalog');
 
+        Route::get('putusan', [InventarisasiHukumController::class, 'putusan'])->name('putusan');
         Route::get('unduh2/{id}/{jenis}', [InventarisasiHukumController::class, 'unduh2'])->name('unduh2');
         Route::get('unduh3/{id}/{jenis}', [InventarisasiHukumController::class, 'unduh3'])->name('unduh3');
         Route::get('download/{id}', [InventarisasiHukumController::class, 'download'])->name('download');
         Route::get('review_score/{jenis}', [InventarisasiHukumController::class, 'review_score'])->name('review_score');
+        Route::post('review_score', [InventarisasiHukumController::class, 'review_score_post'])->name('review_score.post');
     }
 );

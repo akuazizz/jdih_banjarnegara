@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <link rel="canonical" href="" />
-    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+    <link rel="shortcut icon" href="{{asset('jdihn.png')}}" />
     <!--begin::Fonts-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
     <link rel="stylesheet" href="{{ asset('plugins/global/plugins.bundle.css') }}" type="text/css">
@@ -33,7 +33,7 @@
                 <!--end::Logo-->
                 <!--begin::Wrapper-->
                 <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-                    
+
                     <h2>Lupa Password</h2>
                     @if (session('status'))
                         <div class="alert alert-success">{{ session('status') }}</div>

@@ -51,10 +51,13 @@ class Helper
         $datenow = date('Y-m-d');
         $year = date('Y');
         $bln = date('m');
+        $week_start = date('Y-m-d', strtotime('monday this week'));
+        $week_end = date('Y-m-d', strtotime('sunday this week'));
+
         $data = DB::connection()->select(
-            "SELECT 
+            "SELECT
             sum(if(date = '$datenow',hits,0)) as daily,
-            sum(if(YEARWEEK(`date`, 1) = YEARWEEK(CURDATE(), 1),hits,0)) as weekly,
+            sum(if(date BETWEEN '$week_start' AND '$week_end',hits,0)) as weekly,
             sum(if(year(date) = '$year' and month(date) = '$bln', hits, 0 )) as mounty,
             sum(if(year(date) = '$year', hits, 0 )) as yearly
             FROM visitor ");
