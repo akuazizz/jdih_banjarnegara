@@ -263,6 +263,16 @@
                                             </div>
                                         </div>
                                     @endif
+                                    <div class="form-group row mb-4">
+                                        <label class="col-lg-4 col-form-label fw-bold fs-6">Dokumen Terkait</label>
+                                        <div class="col-8">
+                                            <select class="form-control form-select" id="dokumen_terkait" name="dokumen_terkait"
+                                                multiple="multiple">
+                                                <option></option>
+                                            </select>
+                                            <small class="text-muted">Pilih dokumen yang terkait dengan putusan ini (opsional)</small>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-footer">
                                     <div class="row">
@@ -331,6 +341,32 @@
                 minimumInputLength: 3,
                 tags: true
             });
+            $('#dokumen_terkait').select2({
+                placeholder: "Pilih Dokumen Terkait",
+                closeOnSelect: false,
+                ajax: {
+                    url: '{{ route("admin.master.file.getDokumenOptions") }}',
+                    dataType: 'json',
+                    delay: 300,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.items,
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2
+            });
             $('#simpanfile').on('click', function(e) {
                 e.preventDefault();
                 if (!document.querySelector('#post_file').checkValidity()) {
@@ -360,6 +396,9 @@
                 formData.append('file', $('#file')[0].files[0]);
                 $('#subjek').val().forEach(function(topic) {
                     formData.append('subjek[]', topic);
+                });
+                $('#dokumen_terkait').val().forEach(function(docId) {
+                    formData.append('dokumen_terkait[]', docId);
                 });
                 Swal.fire("Silahkan Tungu ....")
                 Swal.showLoading()

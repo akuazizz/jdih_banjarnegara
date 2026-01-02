@@ -55,6 +55,9 @@
                                 <button class="nav-link" id="nav-abstrak-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-abstrak" type="button" role="tab"
                                     aria-controls="nav-abstrak" aria-selected="false">{{ __('Abstrak') }}</button>
+                                <button class="nav-link" id="nav-dokumen-terkait-tab" data-bs-toggle="tab"
+                                    data-bs-target="#nav-dokumen-terkait" type="button" role="tab"
+                                    aria-controls="nav-dokumen-terkait" aria-selected="false">{{ __('Dokumen Terkait') }}</button>
                                 <button class="nav-link survey" id="nav-nilai-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-nilai" type="button" role="tab" aria-controls="nav-nilai"
                                     aria-selected="false">{{ __('Nilai Kami') }}</button>
@@ -347,6 +350,35 @@
                                     <h4>Berkas Belum Tersedia</h4>
                                 </center>
                                 {{-- <iframe src="{{ url('inventarisasi-hukum/abstrak/'.encrypt($data[0]->id).'/html') }}" align="top" height="620" width="100%" frameborder="0" scrolling="auto"></iframe> --}}
+                                @endif
+                            </div>
+                            <div class="tab-pane fade" id="nav-dokumen-terkait" role="tabpanel"
+                                aria-labelledby="nav-dokumen-terkait-tab">
+                                @if($data[0]->relatedDocuments && $data[0]->relatedDocuments->count() > 0)
+                                    <div class="row">
+                                        @foreach($data[0]->relatedDocuments as $related)
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        @if($related->no_peraturan == 0)
+                                                            {{ __($related->kategori_nama ?? ($related->tipe_dokumen == 4 ? 'Putusan' : 'Dokumen')) .' '.__('Tahun').' '.$related->tahun_diundang }}
+                                                        @else
+                                                            {{ __($related->kategori_nama ?? ($related->tipe_dokumen == 4 ? 'Putusan' : 'Dokumen')) .' '. __('Nomor') .' '.$related->no_peraturan.' '.__('Tahun').' '.$related->tahun_diundang }}
+                                                        @endif
+                                                    </h5>
+                                                    <p class="card-text">{{ Helper::string_rmv_html($related->content) }}</p>
+                                                    <a href="{{ url('inventarisasi-hukum/detail/' . $related->link) }}" class="btn btn-primary">{{ __('Lihat Detail') }}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                <center>
+                                    <img style="width:256px" src="{{ asset('folders.png') }}" alt="">
+                                    <h4>Tidak ada dokumen terkait</h4>
+                                </center>
                                 @endif
                             </div>
                             <div class="tab-pane fade" id="nav-nilai" role="tabpanel"

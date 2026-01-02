@@ -51,4 +51,14 @@ class InventarisasiHukum extends Model
         'tgl_dibacakan',
         'status_putusan'
     ];
+
+    public function relatedDocuments()
+    {
+        return $this->belongsToMany(InventarisasiHukum::class, 'inventarisasi_hukum_related', 'inventarisasi_hukum_id', 'related_id')
+            ->leftJoin('kategori', 'kategori.id', '=', 'inventarisasi_hukum.jenis')
+            ->select([
+                'inventarisasi_hukum.*',
+                'kategori.nama as kategori_nama'
+            ]);
+    }
 }

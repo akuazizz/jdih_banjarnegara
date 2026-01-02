@@ -43,7 +43,9 @@ class InventarisasiHukumController extends Controller
             ->leftJoin('bidang_hukum', 'bidang_hukum.id', '=', 'inventarisasi_hukum.bid_hukum')
             ->leftJoin('abstrak', 'abstrak.id_ph', '=', 'inventarisasi_hukum.id')
             ->leftJoin('master_bahasa', 'master_bahasa.id', '=', 'inventarisasi_hukum.bahasa')
-            ->where('inventarisasi_hukum.link', $link)->get();
+            ->where('inventarisasi_hukum.link', $link)
+            ->with('relatedDocuments')
+            ->get();
         $updatedetail = InventarisasiHukum::where('link', $link);
         $updatedetail->update([
             'view' => $data[0]->view + 1

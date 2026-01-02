@@ -64,6 +64,7 @@ Route::group(
         Route::post('/master-file-delete', [Filecontroller::class, 'delete'])->name('master.file.delete');
         Route::post('/master-file-tambah-store', [Filecontroller::class, 'store'])->name('master.file.tambah.store');
         Route::post('/master-file-update-proccess', [Filecontroller::class, 'update_proses'])->name('master.file.update.proses');
+        Route::get('/master-produk-hukum/get-dokumen-options', [Filecontroller::class, 'getDokumenOptions'])->name('master.file.getDokumenOptions')->withoutMiddleware(['auth']);
 
         // Putusan routes
         Route::get('/master-produk-hukum-putusan', [Filecontroller::class, 'indexPutusan'])->name('master.file.putusan');

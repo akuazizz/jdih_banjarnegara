@@ -212,6 +212,18 @@ class Filecontroller extends Controller
             'file_abstrak' => $abstrakname
         ]);
 
+        // Handle dokumen terkait
+        if ($request->has('dokumen_terkait') && is_array($request->dokumen_terkait)) {
+            foreach ($request->dokumen_terkait as $relatedId) {
+                DB::table('inventarisasi_hukum_related')->insert([
+                    'inventarisasi_hukum_id' => $tambah->id,
+                    'related_id' => $relatedId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+
         if ($tambah) {
             return response()->json(['status' => 'success', 'message' => 'tambah Produk hukum baru berhasil'], 200);
         } else {
@@ -320,6 +332,19 @@ class Filecontroller extends Controller
                 'id_ph' => $request->idph,
                 'file_abstrak' => $abstrakname
             ]);
+        }
+
+        // Handle dokumen terkait - hapus yang lama dan tambahkan yang baru
+        DB::table('inventarisasi_hukum_related')->where('inventarisasi_hukum_id', $request->idph)->delete();
+        if ($request->has('dokumen_terkait') && is_array($request->dokumen_terkait)) {
+            foreach ($request->dokumen_terkait as $relatedId) {
+                DB::table('inventarisasi_hukum_related')->insert([
+                    'inventarisasi_hukum_id' => $request->idph,
+                    'related_id' => $relatedId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
         if ($tambah) {
@@ -435,6 +460,7 @@ class Filecontroller extends Controller
         }
 
         $tambah = InventarisasiHukum::create([
+            'nama' => 'Putusan',
             'tipe_dokumen' => 4,
             'jenis' => $putusanKategoriId,
             'content' => $request->judul,
@@ -467,6 +493,18 @@ class Filecontroller extends Controller
                 'id_ph' => $tambah->id,
                 'file_abstrak' => $abstrakname
             ]);
+        }
+
+        // Handle dokumen terkait
+        if ($request->has('dokumen_terkait') && is_array($request->dokumen_terkait)) {
+            foreach ($request->dokumen_terkait as $relatedId) {
+                DB::table('inventarisasi_hukum_related')->insert([
+                    'inventarisasi_hukum_id' => $tambah->id,
+                    'related_id' => $relatedId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
         if ($tambah) {
@@ -536,6 +574,7 @@ class Filecontroller extends Controller
         $tags = implode(", ", $request->subjek);
 
         $tambah = $ph->update([
+            'nama' => 'Putusan',
             'tipe_dokumen' => 4,
             'jenis' => $putusanKategoriId ?: $getid->jenis,
             'content' => $request->judul,
@@ -569,6 +608,19 @@ class Filecontroller extends Controller
                 'id_ph' => $request->idph,
                 'file_abstrak' => $abstrakname
             ]);
+        }
+
+        // Handle dokumen terkait - hapus yang lama dan tambahkan yang baru
+        DB::table('inventarisasi_hukum_related')->where('inventarisasi_hukum_id', $request->idph)->delete();
+        if ($request->has('dokumen_terkait') && is_array($request->dokumen_terkait)) {
+            foreach ($request->dokumen_terkait as $relatedId) {
+                DB::table('inventarisasi_hukum_related')->insert([
+                    'inventarisasi_hukum_id' => $request->idph,
+                    'related_id' => $relatedId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
         if ($tambah) {
@@ -620,6 +672,73 @@ class Filecontroller extends Controller
             return response()->json(['status' => 'success', 'message' => 'Hapus Putusan berhasil'], 200);
         } else {
             return response()->json(['status' => 'error', 'message' => 'Hapus Putusan gagal'], 400);
+        }
+    }
+
+    public function getDokumenOptions(Request $request)
+    {
+        try {
+            $search = $request->get('q', '');
+            $page = $request->get('page', 1);
+            $perPage = 30;
+
+            // Debug: Log the request parameters
+            \Log::info('getDokumenOptions called', [
+                'search' => $search,
+                'page' => $page,
+                'user' => auth()->check() ? auth()->id() : 'not authenticated'
+            ]);
+
+            $query = InventarisasiHukum::select(
+                'inventarisasi_hukum.id',
+                'no_peraturan',
+                'tahun_diundang',
+                'content',
+                'inventarisasi_hukum.tipe_dokumen',
+                'kategori.nama'
+            )
+                ->leftJoin('kategori', 'kategori.id', '=', 'inventarisasi_hukum.jenis')
+                ->where('inventarisasi_hukum.publish', 1);
+
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('no_peraturan', 'like', '%' . $search . '%')
+                        ->orWhere('content', 'like', '%' . $search . '%')
+                        ->orWhere('nama', 'like', '%' . $search . '%');
+                });
+            }
+
+            $total = $query->count();
+            \Log::info('Total results found: ' . $total);
+
+            $results = $query->skip(($page - 1) * $perPage)->take($perPage)->get();
+
+            $items = $results->map(function ($item) {
+                // Untuk putusan, gunakan nama "Putusan", untuk lainnya gunakan nama kategori
+                $namaDokumen = ($item->tipe_dokumen == 4) ? 'Putusan' : $item->nama;
+                return [
+                    'id' => $item->id,
+                    'text' => ($namaDokumen ? $namaDokumen . ' ' : '') .
+                        ($item->no_peraturan ? 'No. ' . $item->no_peraturan . ' ' : '') .
+                        'Tahun ' . $item->tahun_diundang .
+                        ' - ' . substr(strip_tags($item->content), 0, 50) . '...'
+                ];
+            });
+
+            \Log::info('Returning ' . count($items) . ' items');
+
+            return response()->json([
+                'items' => $items,
+                'total_count' => $total
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error in getDokumenOptions: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'error' => 'Internal server error: ' . $e->getMessage(),
+                'items' => [],
+                'total_count' => 0
+            ], 500);
         }
     }
 }
