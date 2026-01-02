@@ -431,7 +431,7 @@ class Filecontroller extends Controller
             $file_size = round($file->getSize() / 1024);
             $file_ex = $file->getClientOriginalExtension();
 
-            $destinationPath = public_path() . "/produk_hukum/Putusan/";
+            $destinationPath = public_path() . "/produk_hukum/putusan/";
             if (!file_exists($destinationPath)) {
                 File::makeDirectory($destinationPath, $mode = 0777, true, true);
             }
@@ -440,7 +440,7 @@ class Filecontroller extends Controller
                 return response()->json(['status' => 'error', 'message' => 'jenis file yang di ijinkan hanya pdf'], 400);
             }
             $upf = $file->move($destinationPath, $file_name);
-            $fu = "produk_hukum/Putusan/" . $file_name;
+            $fu = "produk_hukum/putusan/" . $file_name;
         } else {
             return response()->json(['status' => 'error', 'message' => 'File putusan wajib diupload'], 400);
         }
@@ -545,7 +545,7 @@ class Filecontroller extends Controller
             }
         }
 
-        $destinationPath = public_path() . "/produk_hukum/Putusan/";
+        $destinationPath = public_path() . "/produk_hukum/putusan/";
         if (!file_exists($destinationPath)) {
             File::makeDirectory($destinationPath, $mode = 0777, true, true);
         }
@@ -569,7 +569,7 @@ class Filecontroller extends Controller
             $file_name = $getid->file;
         }
 
-        $fu = "produk_hukum/Putusan/" . $file_name;
+        $fu = "produk_hukum/putusan/" . $file_name;
 
         $tags = implode(", ", $request->subjek);
 

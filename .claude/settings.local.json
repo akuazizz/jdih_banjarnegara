@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan tinker:*)"
+      "Bash(php artisan tinker:*)",
+      "Bash(dir:*)",
+      "Bash(mysql:*)",
+      "Bash(php:*)"
     ]
   }
 }
