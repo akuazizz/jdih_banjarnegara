@@ -147,25 +147,16 @@
                                         </div>
                                     </div>
                                     <div class="form-group row mb-4">
-                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Status Putusan</label>
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Status</label>
                                         <div class="col-8">
                                             <select class="form-select form-select-solid form-control-lg"
-                                                data-kt-select2="true" id="status_putusan">
+                                                data-kt-select2="true" id="status">
                                                 <option
-                                                    <?= isset($data) && $data->status_putusan == 'Inkracht' ? 'selected' : '' ?>
-                                                    value="Inkracht">Inkracht</option>
+                                                    <?= isset($data) && $data->status == 1 ? 'selected' : '' ?>
+                                                    value="1">Berlaku</option>
                                                 <option
-                                                    <?= isset($data) && $data->status_putusan == 'Verstek' ? 'selected' : '' ?>
-                                                    value="Verstek">Verstek</option>
-                                                <option
-                                                    <?= isset($data) && $data->status_putusan == 'Ditolak' ? 'selected' : '' ?>
-                                                    value="Ditolak">Ditolak</option>
-                                                <option
-                                                    <?= isset($data) && $data->status_putusan == 'Dikabulkan' ? 'selected' : '' ?>
-                                                    value="Dikabulkan">Dikabulkan</option>
-                                                <option
-                                                    <?= isset($data) && $data->status_putusan == 'Dikabulkan Sebagian' ? 'selected' : '' ?>
-                                                    value="Dikabulkan Sebagian">Dikabulkan Sebagian</option>
+                                                    <?= isset($data) && $data->status == 0 ? 'selected' : '' ?>
+                                                    value="0">Tidak Berlaku</option>
                                             </select>
                                         </div>
                                     </div>
@@ -387,7 +378,7 @@
                 formData.append('tempat_peradilan', $('#tempat_peradilan').val());
                 formData.append('tgl_dibacakan', $('#tgl_dibacakan').val());
                 formData.append('sumber', $('#sumber').val());
-                formData.append('status_putusan', $('#status_putusan').val());
+                formData.append('status', $('#status').val());
                 formData.append('bahasa', $('#bahasa').val());
                 formData.append('bidang', $('#bidang').val());
                 formData.append('lokasi', $('#lokasi').val());

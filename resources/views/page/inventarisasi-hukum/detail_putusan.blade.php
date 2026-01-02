@@ -129,9 +129,15 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><strong>{{ __('Status Putusan') }}</strong></td>
+                                                <td><strong>{{ __('Status') }}</strong></td>
                                                 <td class="text-center">:</td>
-                                                <td>{{ $data[0]->status_putusan }}</td>
+                                                <td>
+                                                    @if ($data[0]->status == 1)
+                                                        Berlaku
+                                                    @else
+                                                        Tidak Berlaku
+                                                    @endif
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td><strong>{{ __('Bahasa') }}</strong></td>
