@@ -648,6 +648,32 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6">
                     <div class="section-title text-center">
+                        <h3>
+                            {{ app()->getLocale() == 'id' ? 'Informasi Produk dan Layanan Hukum Kabupaten Banjarnegara dalam Satu Portal' : GoogleTranslate::trans('Informasi Produk dan Layanan Hukum Kabupaten Banjarnegara dalam Satu Portal', app()->getLocale()) }}
+                        </h3>
+                        <p class="text">
+                            {{ app()->getLocale() == 'id' ? 'Bagian Hukum Sekretariat Daerah Kabupaten Banjarnegara' : GoogleTranslate::trans('Bagian Hukum Sekretariat Daerah Kabupaten Banjarnegara', app()->getLocale()) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center" style="margin-bottom: 48px;">
+                <div class="col-lg-4 col-md-7 col-sm-9">
+                    <div class="features-style-two text-center" style="padding: 10px 0; display: block;">
+                        <div class="features-icon"
+                            style="width: 100%; height: auto; line-height: normal; display: block; border-radius: 12px; overflow: hidden;">
+                            <a href="https://linktr.ee/PUUBAGIANHUKUMBNA" target="_blank" rel="noopener noreferrer"
+                                style="display: block;">
+                                <img src="{{ asset('sipamanhuda.jpeg') }}"
+                                    style="display: block; width: 100%; max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 24px rgba(0,0,0,0.12);">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="section-title text-center">
                         <h3 class="title">
                             {{ app()->getLocale() == 'id' ? 'Tautan' : GoogleTranslate::trans('Tautan', app()->getLocale()) }}
                         </h3>

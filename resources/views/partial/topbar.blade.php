@@ -576,6 +576,19 @@
                                             @endphp
                                         @endif
                                     </a></li>
+                                    <li><a href="{{ route('inventarisasi-hukum.kategori', ['risalah-rapat']) }}">
+                                        @if(app()->getLocale() == 'id')
+                                            Risalah Rapat
+                                        @else
+                                            @php
+                                                try {
+                                                    echo GoogleTranslate::trans('Risalah Rapat', app()->getLocale());
+                                                } catch (\Exception $e) {
+                                                    echo 'Risalah Rapat';
+                                                }
+                                            @endphp
+                                        @endif
+                                    </a></li>
                                 </ul>
                             </li>
                             <li class="nav-item">
